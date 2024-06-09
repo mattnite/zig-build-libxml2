@@ -11,13 +11,13 @@ pub fn build(b: *std.Build) !void {
     });
     lib.linkLibC();
 
-    lib.addIncludePath(.{ .path = "upstream/include" });
-    lib.addIncludePath(.{ .path = "override/include" });
+    lib.addIncludePath(b.path("upstream/include"));
+    lib.addIncludePath(b.path("override/include"));
     if (target.result.os.tag == .windows) {
-        lib.addIncludePath(.{ .path = "override/config/win32" });
+        lib.addIncludePath(b.path("override/config/win32"));
         lib.linkSystemLibrary("ws2_32");
     } else {
-        lib.addIncludePath(.{ .path = "override/config/posix" });
+        lib.addIncludePath(b.path("override/config/posix"));
     }
 
     var flags = std.ArrayList([]const u8).init(b.allocator);
@@ -93,8 +93,8 @@ pub fn build(b: *std.Build) !void {
     }
 
     lib.addCSourceFiles(.{ .files = srcs, .flags = flags.items });
-    lib.installHeader(.{ .path = "override/include/libxml/xmlversion.h" }, "libxml/xmlversion.h");
-    lib.installHeadersDirectory(.{ .path = "upstream/include/libxml" }, "libxml", .{});
+    lib.installHeader(b.path("override/include/libxml/xmlversion.h"), "libxml/xmlversion.h");
+    lib.installHeadersDirectory(b.path("upstream/include/libxml"), "libxml", .{});
 
     b.installArtifact(lib);
 }
