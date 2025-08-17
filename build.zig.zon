@@ -4,7 +4,10 @@
     .fingerprint = 0xf268267bd418bd2a,
     .minimum_zig_version = "0.15.0-dev.1218+bc8e1a74c",
     .paths = .{
+        "LICENSE",
         "build.zig",
         "build.zig.zon",
+        "upstream",
+        "override",
     },
 }
