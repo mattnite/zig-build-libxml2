@@ -1,7 +1,7 @@
 .{
-    .name = .zig_build_libxml2,
+    .name = .libxml2,
     .version = "0.0.0",
-    .fingerprint = 0x3644b299a0d3754, // Changing this has security and trust implications.
+    .fingerprint = 0xf268267bd418bd2a,
     .minimum_zig_version = "0.15.0-dev.1218+bc8e1a74c",
     .paths = .{
         "build.zig",
