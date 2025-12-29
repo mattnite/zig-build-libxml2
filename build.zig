@@ -4,22 +4,24 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const lib = b.addLibrary(.{
-        .name = "xml2",
-        .root_module = b.createModule(.{
+    const mod = b.addModule("xml2", .{
             .target = target,
             .optimize = optimize,
-        }),
+            .link_libc = true,
     });
-    lib.linkLibC();
 
-    lib.addIncludePath(b.path("upstream/include"));
-    lib.addIncludePath(b.path("override/include"));
+    const lib = b.addLibrary(.{
+        .name = "xml2",
+        .root_module = mod,
+    });
+
+    mod.addIncludePath(b.path("upstream/include"));
+    mod.addIncludePath(b.path("override/include"));
     if (target.result.os.tag == .windows) {
-        lib.addIncludePath(b.path("override/config/win32"));
-        lib.linkSystemLibrary("ws2_32");
+        mod.addIncludePath(b.path("override/config/win32"));
+        mod.linkSystemLibrary("ws2_32", .{});
     } else {
-        lib.addIncludePath(b.path("override/config/posix"));
+        mod.addIncludePath(b.path("override/config/posix"));
     }
 
     var flags: std.ArrayList([]const u8) = .{};
@@ -95,7 +97,7 @@ pub fn build(b: *std.Build) !void {
         }
     }
 
-    lib.addCSourceFiles(.{ .files = srcs, .flags = flags.items });
+    mod.addCSourceFiles(.{ .files = srcs, .flags = flags.items });
     lib.installHeader(b.path("override/include/libxml/xmlversion.h"), "libxml/xmlversion.h");
     lib.installHeadersDirectory(b.path("upstream/include/libxml"), "libxml", .{});
 
